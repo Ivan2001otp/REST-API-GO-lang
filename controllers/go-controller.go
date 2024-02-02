@@ -9,6 +9,7 @@ import (
 	"github.com/Ivan2001otp/REST-API-GO-lang/config"
 	"github.com/Ivan2001otp/REST-API-GO-lang/constants"
 	"github.com/Ivan2001otp/REST-API-GO-lang/models"
+	"github.com/gorilla/mux"
 )
 
 // helper methods
@@ -72,4 +73,32 @@ func GetAllUser(w http.ResponseWriter, req *http.Request) {
 		userList = append(userList, user)
 	}
 	sendResponse(w, http.StatusAccepted, userList)
+}
+
+func GetUserById(w http.ResponseWriter, req *http.Request) {
+
+	vars := mux.Vars(req)
+
+	id := vars["id"]
+
+	user, err := models.FetchUserById(config.GetDB(), id)
+
+	if err != nil {
+		sendError(w, http.StatusNotFound, err.Error())
+	}
+
+	sendResponse(w, http.StatusOK, user)
+}
+
+func DeleteUserById(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+
+	id := vars["id"]
+
+	message, err := models.DeleteUserById(config.GetDB(), id)
+
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, err.Error())
+	}
+	sendResponse(w, http.StatusOK, message)
 }

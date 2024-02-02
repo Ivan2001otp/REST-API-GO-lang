@@ -18,7 +18,7 @@ func main() {
 	routes.RegisterRoutes(router)
 
 	http.Handle("/", router)
-	fmt.Println("listening to port 8081")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	fmt.Println("listening to port 8099")
+	log.Fatal(http.ListenAndServe(":8099", router))
 
 }
