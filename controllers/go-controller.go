@@ -85,6 +85,7 @@ func GetUserById(w http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		sendError(w, http.StatusNotFound, err.Error())
+		return
 	}
 
 	sendResponse(w, http.StatusOK, user)
@@ -99,6 +100,31 @@ func DeleteUserById(w http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 	sendResponse(w, http.StatusOK, message)
+}
+
+func UpdateUserById(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+
+	id := vars["id"]
+
+	var user models.User
+	err := json.NewDecoder(req.Body).Decode(&user)
+
+	if err != nil {
+		sendError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	U, err := user.UpdateModelById(config.GetDB(), id)
+
+	if err != nil {
+		sendError(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	sendResponse(w, http.StatusOK, U)
+
 }
